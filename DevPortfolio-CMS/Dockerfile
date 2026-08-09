@@ -2,7 +2,7 @@
 FROM eclipse-temurin:21-jdk-alpine AS build
 WORKDIR /app
 
-# Install Maven directly in Alpine container for guaranteed 100% build reliability
+# Install Maven directly in Alpine container for 100% reliable builds
 RUN apk add --no-cache maven
 
 COPY . .
@@ -12,4 +12,4 @@ FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 COPY --from=build /app/target/devportfolio-cms-1.0.0.jar app.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Dspring.autoconfigure.exclude=de.flapdoodle.embed.mongo.spring.autoconfigure.EmbeddedMongoAutoConfiguration", "-jar", "app.jar"]

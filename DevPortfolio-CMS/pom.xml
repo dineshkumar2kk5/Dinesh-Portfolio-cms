@@ -79,12 +79,11 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- Embedded MongoDB (for local testing without external MongoDB) -->
+        <!-- Embedded MongoDB (for zero-setup local development) -->
         <dependency>
             <groupId>de.flapdoodle.embed</groupId>
             <artifactId>de.flapdoodle.embed.mongo.spring3x</artifactId>
             <version>4.33.0</version>
-            <scope>test</scope>
         </dependency>
 
         <!-- Testing -->
