@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+<head><title th:text="${pageTitle}">Certification Form</title></head>
+
+<body>
+<main layout:fragment="content">
+
+    <section class="admin-section">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+
+                    <span class="admin-badge"><i class="bi bi-award me-1"></i> CERTIFICATION</span>
+                    <h2 class="admin-title" th:text="${certification.id != null ? 'Edit Certification' : 'Add New Certification'}">Certification Form</h2>
+
+                    <div class="admin-form-card mt-4">
+                        <form th:action="${formAction}" method="post" enctype="multipart/form-data">
+                            <!-- Hidden ID for edit mode -->
+                            <input type="hidden" name="id" th:value="${certification.id}"/>
+                            <input type="hidden" name="certificateImage" th:value="${certification.certificateImage}"/>
+                            <input type="hidden" name="createdAt" th:value="${certification.createdAt}"/>
+
+                            <!-- Name -->
+                            <div class="mb-3">
+                                <label for="name" class="form-label-custom">Certification Name *</label>
+                                <input type="text" id="name" name="name" class="form-control form-control-custom"
+                                       th:value="${certification.name}" placeholder="e.g. AWS Certified Developer - Associate" required/>
+                            </div>
+
+                            <div class="row g-3 mb-3">
+                                <!-- Issuer -->
+                                <div class="col-md-6">
+                                    <label for="issuer" class="form-label-custom">Issuer *</label>
+                                    <input type="text" id="issuer" name="issuer" class="form-control form-control-custom"
+                                           th:value="${certification.issuer}" placeholder="e.g. Amazon Web Services (AWS)" required/>
+                                </div>
+
+                                <!-- Year -->
+                                <div class="col-md-3">
+                                    <label for="year" class="form-label-custom">Year</label>
+                                    <input type="text" id="year" name="year" class="form-control form-control-custom"
+                                           th:value="${certification.year}" placeholder="2025"/>
+                                </div>
+
+                                <!-- Display Order -->
+                                <div class="col-md-3">
+                                    <label for="displayOrder" class="form-label-custom">Display Order</label>
+                                    <input type="number" id="displayOrder" name="displayOrder" class="form-control form-control-custom"
+                                           th:value="${certification.displayOrder}" placeholder="1"/>
+                                </div>
+                            </div>
+
+                            <div class="row g-3 mb-3">
+                                <!-- Credential ID -->
+                                <div class="col-md-6">
+                                    <label for="credentialId" class="form-label-custom">Credential ID</label>
+                                    <input type="text" id="credentialId" name="credentialId" class="form-control form-control-custom"
+                                           th:value="${certification.credentialId}" placeholder="e.g. AWS-DEV-ASSOC-7723"/>
+                                </div>
+
+                                <!-- Issue Date -->
+                                <div class="col-md-6">
+                                    <label for="issueDate" class="form-label-custom">Issue Date</label>
+                                    <input type="text" id="issueDate" name="issueDate" class="form-control form-control-custom"
+                                           th:value="${certification.issueDate}" placeholder="e.g. 18/01/2025"/>
+                                </div>
+                            </div>
+
+                            <!-- Verification URL -->
+                            <div class="mb-3">
+                                <label for="verificationUrl" class="form-label-custom">Verification URL</label>
+                                <input type="url" id="verificationUrl" name="verificationUrl" class="form-control form-control-custom"
+                                       th:value="${certification.verificationUrl}" placeholder="https://www.credly.com/org/..."/>
+                            </div>
+
+                            <!-- Certificate Image -->
+                            <div class="mb-4">
+                                <label for="certFile" class="form-label-custom">Certificate Image / Badge</label>
+                                <input type="file" id="certFile" name="certFile" class="form-control form-control-custom" accept="image/*"/>
+                                <div th:if="${certification.certificateImage}" class="mt-2">
+                                    <small class="text-muted">Current image:</small>
+                                    <img th:src="${certification.certificateImage}" class="d-block mt-1 rounded" style="max-width:200px; max-height:120px; object-fit:cover;"/>
+                                </div>
+                            </div>
+
+                            <!-- Submit -->
+                            <div class="d-flex gap-3 mt-4">
+                                <button type="submit" class="btn btn-primary-custom">
+                                    <i class="bi bi-check-lg me-2"></i>Save Certification
+                                </button>
+                                <a th:href="@{/admin/certifications}" class="btn btn-outline-custom">Cancel</a>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+</body>
+</html>

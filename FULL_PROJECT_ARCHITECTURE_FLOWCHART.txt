@@ -1,0 +1,156 @@
+================================================================================
+         FULL-STACK DEVPORTFOLIO ARCHITECTURE & DATA FLOWCHART
+================================================================================
+
+ +----------------------------------------------------------------------------+
+ |                              SYSTEM TOPOLOGY                               |
+ +----------------------------------------------------------------------------+
+
+  [ PUBLIC VISITOR / RECRUITER ]             [ SYSTEM ADMINISTRATOR (DINESH) ]
+                │                                         │
+                ▼                                         ▼
+   ┌──────────────────────────┐             ┌──────────────────────────┐
+   │    REACT 19 FRONTEND     │             │    SPRING BOOT 3 CMS     │
+   │  (Port 3000 / Vercel)    │             │  (Port 8080 / Render)    │
+   └────────────┬─────────────┘             └────────────┬─────────────┘
+                │                                         │
+                │ REST API (JSON)                         │ Thymeleaf SSR / Form CRUD
+                │ GET /api/projects                       │ Authenticated Session
+                │ GET /api/certifications                 │ ROLE_ADMIN Guarded
+                │ GET /api/blogs                          │
+                ▼                                         ▼
+   ┌──────────────────────────────────────────────────────────────────┐
+   │                    SPRING BOOT 3 REST BACKEND                    │
+   │                                                                  │
+   │  ┌────────────────────┐  ┌────────────────┐  ┌────────────────┐  │
+   │  │  WebSecurityConfig │  │ REST API Ctrl  │  │ Admin UI Ctrl  │  │
+   │  │  CORS Allowed      │  │ /api/*         │  │ /admin/*       │  │
+   │  └─────────┬──────────┘  └───────┬────────┘  └───────┬────────┘  │
+   │            │                     │                   │           │
+   │            └─────────────────────┼───────────────────┘           │
+   │                                  ▼                               │
+   │                        ┌──────────────────┐                      │
+   │                        │  Service Layer   │                      │
+   │                        │ (CommonMark, etc)│                      │
+   │                        └─────────┬────────┘                      │
+   └──────────────────────────────────┼───────────────────────────────┘
+                                      │
+                                      ▼
+                      ┌──────────────────────────────┐
+                      │     MONGODB DOCUMENT STORE   │
+                      │  (Embedded Dev / MongoAtlas) │
+                      │                              │
+                      │  Collections:                │
+                      │   • users                    │
+                      │   • projects                 │
+                      │   • certifications           │
+                      │   • blog_posts               │
+                      └──────────────────────────────┘
+
+
+================================================================================
+1. PUBLIC VISITOR DATA FLOWCHART (REACT PORTFOLIO)
+================================================================================
+
+ Visitor Opens Browser (http://localhost:3000)
+       │
+       ▼
+ React App Initialized (App.tsx)
+       │
+       ├──────────────────────────────────────┐
+       │ HTTP GET Request                     │ HTTP GET Request
+       ▼                                      ▼
+ Fetch /api/projects                    Fetch /api/certifications
+ (http://localhost:8080/api/projects)   (http://localhost:8080/api/certifications)
+       │                                      │
+  ┌────┴────────────────────────┐        ┌────┴────────────────────────┐
+  │ Response Received (200 OK)? │        │ Response Received (200 OK)? │
+  └──────┬──────────────────┬───┘        └──────┬──────────────────┬───┘
+     YES │               NO │               YES │               NO │
+         ▼                  ▼                   ▼                  ▼
+ Populate React      Use Static Fallback  Populate React      Use Static Fallback
+ State (projects)    (dineshData)         State (certs)       (dineshData)
+         │                  │                   │                  │
+         └────────┬─────────┘                   └────────┬─────────┘
+                  │                                      │
+                  ▼                                      ▼
+        Render Project Cards Grid              Render Certifications Grid
+        (With Challenge/Solution Modals)       (With High-Res Image Modals)
+
+
+================================================================================
+2. ADMIN CMS WORKFLOW FLOWCHART (SPRING BOOT BACKEND)
+================================================================================
+
+ Admin Opens Browser (http://localhost:8080/auth/login)
+       │
+       ▼
+ Submit Credentials (username: dinesh, password: dinesh09#)
+       │
+       ▼
+ Spring Security FilterChain (SecurityConfig.java)
+       │
+       ├──► BCryptPasswordEncoder verifies password hash
+       │
+  ┌────┴────────────────────────┐
+  │ Authenticated (ROLE_ADMIN)? │
+  └──────┬──────────────────┬───┘
+     YES │               NO │
+         ▼                  ▼
+ Grant Security Context    Redirect to /auth/login?error
+ Redirect /admin/dashboard
+         │
+         ├──► Manage Projects       --> POST /admin/projects/save  --> Update Mongo
+         ├──► Manage Certifications --> POST /admin/certs/save     --> Update Mongo
+         └──► Write Blog Posts      --> Parse Markdown (CommonMark)--> Save Mongo HTML
+
+
+================================================================================
+3. MONGODB DOCUMENT SCHEMA RELATIONSHIPS
+================================================================================
+
+  ┌────────────────────────┐         ┌────────────────────────┐
+  │       COLLECTION       │         │       COLLECTION       │
+  │        "users"         │         │       "projects"       │
+  ├────────────────────────┤         ├────────────────────────┤
+  │ _id : ObjectId         │         │ _id : ObjectId         │
+  │ username : String      │         │ title : String         │
+  │ email : String         │         │ subtitle : String      │
+  │ password : BCryptHash  │         │ description : String   │
+  │ role : "ROLE_ADMIN"    │         │ techTags : Array<Str>  │
+  └────────────────────────┘         │ imageUrl : String      │
+                                     │ displayOrder : Integer │
+  ┌────────────────────────┐         │ details : Document {   │
+  │       COLLECTION       │         │   challenge: String,   │
+  │    "certifications"    │         │   solution: String,    │
+  ├────────────────────────┤         │   results: Array<Str>  │
+  │ _id : ObjectId         │         │ }                      │
+  │ name : String          │         └────────────────────────┘
+  │ issuer : String        │
+  │ year : String          │         ┌────────────────────────┐
+  │ issueDate : String     │         │       COLLECTION       │
+  │ credentialId : String  │         │      "blog_posts"      │
+  │ certificateImage: Str  │         ├────────────────────────┤
+  │ verificationUrl: Str   │         │ _id : ObjectId         │
+  │ displayOrder : Integer │         │ title : String         │
+  └────────────────────────┘         │ slug : String          │
+                                     │ contentMarkdown : Str  │
+                                     │ contentHtml : Str      │
+                                     │ isPublished : Boolean  │
+                                     └────────────────────────┘
+
+
+================================================================================
+4. ASSET & IMAGE PIPELINE (MULTIPART UPLOADS)
+================================================================================
+
+ Admin Form Upload (.png / .jpg) ──► FileStorageService ──► Save to /uploads/
+                                                                   │
+                                                                   ▼
+ WebMvcConfigurer static resource handler maps physical folder to URL: /uploads/**
+                                                                   │
+                                                                   ▼
+ React App getImageUrl() resolves relative URL (/uploads/abc.png)
+ into absolute backend URL: http://localhost:8080/uploads/abc.png
+
+================================================================================

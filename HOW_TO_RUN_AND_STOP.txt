@@ -1,0 +1,65 @@
+================================================================================
+          DEVPORTFOLIO FULL-STACK PROJECT — HOW TO START & STOP GUIDE
+================================================================================
+
+This project consists of 2 applications:
+  1. BACKEND  : Spring Boot 3 + Embedded MongoDB (Runs on http://localhost:8080)
+  2. FRONTEND : React 19 + Vite + TypeScript (Runs on http://localhost:3000)
+
+--------------------------------------------------------------------------------
+PART 1: HOW TO STOP THE RUNNING PROJECT
+--------------------------------------------------------------------------------
+
+METHOD A: In Your Terminal Window
+  - Click on the terminal window running the server.
+  - Press: Ctrl + C (and type 'Y' if prompted).
+
+METHOD B: Force Stop Using Terminal Commands (If Port is Busy)
+  - To stop Backend (Port 8080):
+      npx kill-port 8080
+      OR in PowerShell:
+      Get-Process -Id (Get-NetTCPConnection -LocalPort 8080).OwningProcess | Stop-Process -Force
+
+  - To stop Frontend (Port 3000):
+      npx kill-port 3000
+      OR in PowerShell:
+      Get-Process -Id (Get-NetTCPConnection -LocalPort 3000).OwningProcess | Stop-Process -Force
+
+--------------------------------------------------------------------------------
+PART 2: HOW TO START THE PROJECT AGAIN
+--------------------------------------------------------------------------------
+
+STEP 1: START THE BACKEND SERVER (Spring Boot)
+  1. Open a new Terminal (PowerShell / Command Prompt).
+  2. Run the following commands:
+
+     cd c:\Users\dinesh\OneDrive\Desktop\mini\DevPortfolio-CMS
+     $env:JAVA_HOME = "C:\Program Files\Eclipse Adoptium\jdk-25.0.4.7-hotspot"
+     .\mvnw.cmd spring-boot:run
+
+  3. Wait until you see: "Started PortfolioApplication in X seconds"
+     Backend will be live at: http://localhost:8080
+
+
+STEP 2: START THE FRONTEND SERVER (React 19)
+  1. Open a SECOND Terminal window.
+  2. Run the following commands:
+
+     cd c:\Users\dinesh\OneDrive\Desktop\mini\Dinesh_Kumar_Portfolio
+     npm run dev
+
+     (CRITICAL NOTE: Always use "npm run dev", DO NOT use "npm start")
+
+  3. Wait until you see: "React Portfolio server launched and listening on http://localhost:3000"
+     Frontend will be live at: http://localhost:3000
+
+--------------------------------------------------------------------------------
+PART 3: ACCESSING YOUR APPLICATION
+--------------------------------------------------------------------------------
+
+  🌐 React Portfolio Frontend : http://localhost:3000
+  🔑 Admin CMS Dashboard     : http://localhost:8080/admin/dashboard
+  👤 Admin Username          : dinesh
+  🔒 Admin Password          : dinesh09#
+
+================================================================================

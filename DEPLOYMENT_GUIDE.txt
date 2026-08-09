@@ -1,0 +1,64 @@
+================================================================================
+           COMPLETE DEPLOYMENT GUIDE: VERCEL (FRONTEND) & RENDER (BACKEND)
+================================================================================
+
+This guide walks you through deploying your React Portfolio on Vercel and your
+Spring Boot + MongoDB CMS on Render.
+
+--------------------------------------------------------------------------------
+PART 1: SET UP CLOUD DATABASE (MongoDB Atlas - FREE)
+--------------------------------------------------------------------------------
+1. Go to https://www.mongodb.com/cloud/atlas and create a free account.
+2. Build a new FREE cluster (M0 Sandbox).
+3. Under "Database Access", create a Database User (username & password).
+4. Under "Network Access", add IP Address: 0.0.0.0/0 (Allows cloud access).
+5. Click "Connect" -> "Drivers" and copy your Connection String:
+   mongodb+sandbox://<username>:<password>@cluster0.mongodb.net/devportfolio_db
+
+--------------------------------------------------------------------------------
+PART 2: DEPLOY SPRING BOOT BACKEND TO RENDER.COM (FREE)
+--------------------------------------------------------------------------------
+1. Push your project code to GitHub.
+2. Log in to https://render.com and click "New +" -> "Web Service".
+3. Connect your GitHub repository.
+4. Select the directory: DevPortfolio-CMS
+5. Configure settings:
+   - Name: devportfolio-backend
+   - Environment: Java
+   - Build Command: ./mvnw clean package -DskipTests
+   - Start Command: java -jar target/devportfolio-cms-1.0.0.jar
+
+6. Under "Environment Variables", add:
+   - spring.data.mongodb.uri = mongodb+srv://<user>:<password>@cluster0.mongodb.net/devportfolio_db
+   - app.admin.username = admin
+   - app.admin.password = YourSecurePassword123!
+
+7. Click "Create Web Service". Render will build and deploy your backend!
+   Your live backend URL will look like: https://devportfolio-backend.onrender.com
+
+--------------------------------------------------------------------------------
+PART 3: DEPLOY REACT FRONTEND TO VERCEL (FREE)
+--------------------------------------------------------------------------------
+1. Log in to https://vercel.com using your GitHub account.
+2. Click "Add New..." -> "Project".
+3. Import your GitHub repository.
+4. Select root directory: Dinesh_Kumar_Portfolio
+5. Framework Preset: Vite
+6. Under "Environment Variables", add:
+   - VITE_API_BASE_URL = https://devportfolio-backend.onrender.com
+
+7. Click "Deploy". Vercel will build and deploy your React frontend in seconds!
+   Your live portfolio URL will look like: https://dinesh-portfolio.vercel.app
+
+--------------------------------------------------------------------------------
+PART 4: CONNECT FRONTEND & BACKEND (CORS CONFIGURATION)
+--------------------------------------------------------------------------------
+In your Spring Boot application.properties or WebConfig.java, ensure your Vercel URL
+is allowed in CORS:
+
+registry.addMapping("/api/**")
+        .allowedOrigins("https://dinesh-portfolio.vercel.app", "http://localhost:3000")
+        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
+
+Re-deploy your backend, and your full-stack app is 100% LIVE on the web!
+================================================================================

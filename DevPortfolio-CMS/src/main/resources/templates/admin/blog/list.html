@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+<head><title th:text="${pageTitle}">Blog Posts</title></head>
+
+<body>
+<main layout:fragment="content">
+
+    <section class="admin-section">
+        <div class="container py-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <span class="admin-badge"><i class="bi bi-journal-text me-1"></i> BLOG</span>
+                    <h2 class="admin-title">Manage Blog Posts</h2>
+                </div>
+                <a th:href="@{/admin/blog/new}" class="btn btn-primary-custom">
+                    <i class="bi bi-plus-lg me-2"></i>New Blog Post
+                </a>
+            </div>
+
+            <!-- Flash Messages -->
+            <div th:if="${successMessage}" class="alert alert-success alert-custom d-flex align-items-center gap-2 animate-fade-in">
+                <i class="bi bi-check-circle"></i><span th:text="${successMessage}">Success</span>
+            </div>
+            <div th:if="${errorMessage}" class="alert alert-danger alert-custom d-flex align-items-center gap-2 animate-fade-in">
+                <i class="bi bi-exclamation-triangle"></i><span th:text="${errorMessage}">Error</span>
+            </div>
+
+            <!-- Blog Posts Table -->
+            <div class="admin-table-card">
+                <div class="table-responsive">
+                    <table class="table table-custom">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Cover</th>
+                                <th>Title</th>
+                                <th>Status</th>
+                                <th>Tags</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="post, stat : ${posts}">
+                                <td th:text="${stat.index + 1}">1</td>
+                                <td>
+                                    <img th:if="${post.coverImageUrl}" th:src="${post.coverImageUrl}"
+                                         class="rounded" style="width:48px;height:48px;object-fit:cover;"/>
+                                    <span th:unless="${post.coverImageUrl}" class="text-muted"><i class="bi bi-image"></i></span>
+                                </td>
+                                <td>
+                                    <strong th:text="${post.title}">Post Title</strong>
+                                    <br/><small class="text-muted font-monospace" th:text="'/blog/' + ${post.slug}">slug</small>
+                                </td>
+                                <td>
+                                    <span th:if="${post.published}" class="badge bg-success">Published</span>
+                                    <span th:unless="${post.published}" class="badge bg-secondary">Draft</span>
+                                </td>
+                                <td>
+                                    <span th:each="tag : ${post.tags}" class="tech-badge-sm me-1 mb-1" th:text="${tag}">Tag</span>
+                                </td>
+                                <td th:text="${#temporals.format(post.createdAt, 'MMM dd, yyyy')}">Date</td>
+                                <td>
+                                    <div class="d-flex gap-1">
+                                        <a th:if="${post.published}" th:href="@{/blog/{slug}(slug=${post.slug})}"
+                                           target="_blank" class="btn btn-sm btn-outline-info" title="View">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a th:href="@{/admin/blog/edit/{id}(id=${post.id})}"
+                                           class="btn btn-sm btn-outline-warning" title="Edit">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <form th:action="@{/admin/blog/delete/{id}(id=${post.id})}"
+                                              method="post" class="d-inline"
+                                              onsubmit="return confirm('Are you sure you want to delete this post?');">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div th:if="${#lists.isEmpty(posts)}" class="text-center py-5">
+                    <i class="bi bi-journal-x fs-1 text-muted"></i>
+                    <p class="text-muted mt-3">No blog posts yet. Create your first post!</p>
+                </div>
+            </div>
+
+            <a th:href="@{/admin/dashboard}" class="btn btn-outline-custom mt-3">
+                <i class="bi bi-arrow-left me-2"></i>Back to Dashboard
+            </a>
+        </div>
+    </section>
+
+</main>
+</body>
+</html>

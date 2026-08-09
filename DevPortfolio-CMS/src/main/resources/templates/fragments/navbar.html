@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<!-- Navbar Fragment -->
+<nav th:fragment="navbar" class="navbar navbar-expand-lg sticky-top glass-nav" id="portfolio-nav">
+    <div class="container d-flex align-items-center justify-content-between">
+        <!-- Brand (Clicking dinesh.dev opens React Portfolio at http://localhost:3000) -->
+        <a class="navbar-brand d-flex align-items-center gap-2 m-0 p-0" href="http://localhost:3000" target="_blank" title="Click to open React Portfolio (http://localhost:3000)">
+            <span class="brand-text text-uppercase font-mono fw-bold fs-6 tracking-wider">dinesh.dev</span>
+            <span class="pulse-dot"></span>
+        </a>
+
+        <!-- Mobile Toggle -->
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
+            <i class="bi bi-list fs-4 text-light"></i>
+        </button>
+
+        <!-- Nav Content -->
+        <div class="collapse navbar-collapse" id="navContent">
+            <!-- Nav Links for Admin -->
+            <ul class="navbar-nav mx-auto gap-2" sec:authorize="isAuthenticated()">
+                <li class="nav-item">
+                    <a class="nav-link nav-link-custom" th:href="@{/admin/dashboard}">
+                        <i class="bi bi-speedometer2 me-1"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-link-custom" th:href="@{/admin/projects}">
+                        <i class="bi bi-folder me-1"></i> Projects
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-link-custom" th:href="@{/admin/certifications}">
+                        <i class="bi bi-award me-1"></i> Certifications
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-link-custom" th:href="@{/admin/resume}">
+                        <i class="bi bi-file-earmark-pdf me-1"></i> Resume
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Right side: Theme + Auth (Always pushed right with ms-auto) -->
+            <div class="d-flex align-items-center gap-2.5 ms-auto mt-2 mt-lg-0">
+                <!-- Theme Toggle -->
+                <button class="btn btn-sm btn-outline-secondary theme-toggle-btn rounded-circle d-flex align-items-center justify-content-center" id="themeToggle" title="Toggle theme" style="width:34px; height:34px;">
+                    <i class="bi bi-moon-stars" id="themeIcon"></i>
+                </button>
+
+                <!-- Auth Links -->
+                <div sec:authorize="isAuthenticated()">
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-admin-pill dropdown-toggle rounded-pill px-3" type="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-shield-lock me-1"></i>
+                            <span sec:authentication="name">Admin</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end shadow-lg border-secondary">
+                            <li><a class="dropdown-item" th:href="@{/admin/dashboard}"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
+                            <li><a class="dropdown-item" th:href="@{/admin/projects}"><i class="bi bi-folder me-2"></i>Projects</a></li>
+                            <li><a class="dropdown-item" th:href="@{/admin/certifications}"><i class="bi bi-award me-2"></i>Certifications</a></li>
+                            <li><a class="dropdown-item" th:href="@{/admin/resume}"><i class="bi bi-file-earmark-pdf me-2"></i>Manage Resume</a></li>
+                            <li><hr class="dropdown-divider"/></li>
+                            <li>
+                                <form th:action="@{/auth/logout}" method="post" class="d-inline">
+                                    <button type="submit" class="dropdown-item text-danger">
+                                        <i class="bi bi-box-arrow-right me-2"></i>Logout
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div sec:authorize="!isAuthenticated()">
+                    <a th:href="@{/auth/login}" class="btn btn-sm btn-outline-light rounded-pill px-3 login-btn">
+                        <i class="bi bi-person me-1"></i> Login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+</html>

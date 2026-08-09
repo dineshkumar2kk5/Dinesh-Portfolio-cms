@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+<head><title th:text="${pageTitle}">Manage Resume — Admin</title></head>
+
+<body>
+<main layout:fragment="content">
+
+    <section class="admin-section">
+        <div class="container py-5">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <span class="admin-badge"><i class="bi bi-file-earmark-pdf me-1"></i> RESUME CMS</span>
+                    <h1 class="admin-title">Manage Resume Document</h1>
+                    <p class="admin-subtitle">Upload your latest CV/Resume PDF. It will automatically update the Download button on your React Portfolio!</p>
+                </div>
+                <a th:href="@{/admin/dashboard}" class="btn btn-outline-light btn-sm">
+                    <i class="bi bi-arrow-left me-1"></i> Dashboard
+                </a>
+            </div>
+
+            <!-- Alerts -->
+            <div th:if="${successMessage}" class="alert alert-success alert-custom d-flex align-items-center gap-2 mb-4">
+                <i class="bi bi-check-circle fs-5"></i>
+                <span th:text="${successMessage}">Success</span>
+            </div>
+            <div th:if="${errorMessage}" class="alert alert-danger alert-custom d-flex align-items-center gap-2 mb-4">
+                <i class="bi bi-exclamation-triangle fs-5"></i>
+                <span th:text="${errorMessage}">Error</span>
+            </div>
+
+            <div class="row g-4">
+                <!-- Current Active Resume Card -->
+                <div class="col-md-5">
+                    <div class="admin-card p-4 h-100">
+                        <h5 class="admin-card-title mb-3">
+                            <i class="bi bi-file-earmark-check text-success me-2"></i>Active Resume File
+                        </h5>
+
+                        <div th:if="${currentResume != null}" class="p-4 border border-success-subtle rounded-3 bg-dark-subtle text-center">
+                            <i class="bi bi-file-earmark-pdf-fill text-danger display-4 mb-3 d-block"></i>
+                            <h6 class="fw-bold text-light mb-1" th:text="${currentResume.fileName}">Resume.pdf</h6>
+                            <p class="text-muted small font-mono mb-3" th:text="${'Uploaded: ' + #temporals.format(currentResume.uploadedAt, 'dd MMM yyyy, HH:mm')}">Uploaded Date</p>
+                            <a th:href="${currentResume.fileUrl}" target="_blank" class="btn btn-sm btn-outline-success">
+                                <i class="bi bi-box-arrow-up-right me-1"></i> Preview Active PDF
+                            </a>
+                        </div>
+
+                        <div th:if="${currentResume == null}" class="p-4 border border-secondary border-dashed rounded-3 text-center text-muted">
+                            <i class="bi bi-file-earmark-x display-4 mb-2 d-block text-secondary"></i>
+                            <p class="mb-0">No custom resume uploaded yet.</p>
+                            <small class="text-muted">React portfolio will fallback to standard transmission alert.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resume Settings Forms (Google Drive Link or Local File Upload) -->
+                <div class="col-md-7 space-y-4">
+                    <!-- Google Drive Link Card -->
+                    <div class="admin-card p-4 mb-4 border border-success-subtle">
+                        <h5 class="admin-card-title mb-2 text-success">
+                            <i class="bi bi-google me-2"></i>Option A: Share Google Drive Resume Link
+                        </h5>
+                        <p class="text-muted small mb-3">Paste your public Google Drive view link (e.g. <code>https://drive.google.com/file/d/.../view</code>). Recommended!</p>
+
+                        <form th:action="@{/admin/resume/link}" method="post">
+                            <div class="mb-3">
+                                <label for="driveUrl" class="form-label font-mono text-muted small uppercase">Google Drive Shareable Link</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-dark border-secondary text-success"><i class="bi bi-link-45deg"></i></span>
+                                    <input type="url" id="driveUrl" name="driveUrl" class="form-control form-control-custom"
+                                           placeholder="https://drive.google.com/file/d/your-file-id/view?usp=sharing"
+                                           th:value="${currentResume != null && currentResume.fileType == 'drive_link' ? currentResume.fileUrl : ''}" required />
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-success px-4 py-2 font-mono">
+                                <i class="bi bi-check2-circle me-2"></i> Save Google Drive Link
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- File Upload Card -->
+                    <div class="admin-card p-4">
+                        <h5 class="admin-card-title mb-2 text-primary">
+                            <i class="bi bi-upload me-2"></i>Option B: Upload Local PDF/Doc File
+                        </h5>
+
+                        <form th:action="@{/admin/resume/upload}" method="post" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <label for="resumeFile" class="form-label font-mono text-muted small uppercase">Select PDF or Word Document (*.pdf, *.docx)</label>
+                                <input type="file" id="resumeFile" name="resumeFile" class="form-control form-control-custom" accept=".pdf,.doc,.docx" required />
+                            </div>
+
+                            <button type="submit" class="btn btn-outline-primary px-4 py-2">
+                                <i class="bi bi-cloud-arrow-up me-2"></i> Upload Local PDF
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+</body>
+</html>

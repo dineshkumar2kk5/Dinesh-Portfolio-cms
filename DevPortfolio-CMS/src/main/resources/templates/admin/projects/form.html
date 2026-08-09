@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+<head><title th:text="${pageTitle}">Project Form</title></head>
+
+<body>
+<main layout:fragment="content">
+
+    <section class="admin-section">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+
+                    <span class="admin-badge"><i class="bi bi-folder-plus me-1"></i> PROJECT</span>
+                    <h2 class="admin-title" th:text="${project.id != null ? 'Edit Project' : 'Add New Project'}">Project Form</h2>
+
+                    <div class="admin-form-card mt-4">
+                        <form th:action="${formAction}" method="post" enctype="multipart/form-data">
+                            <!-- Hidden ID for edit mode -->
+                            <input type="hidden" name="id" th:value="${project.id}"/>
+                            <!-- Preserve existing image URL during edits -->
+                            <input type="hidden" name="imageUrl" th:value="${project.imageUrl}"/>
+                            <input type="hidden" name="createdAt" th:value="${project.createdAt}"/>
+
+                            <!-- Title -->
+                            <div class="mb-3">
+                                <label for="title" class="form-label-custom">Project Title *</label>
+                                <input type="text" id="title" name="title" class="form-control form-control-custom"
+                                       th:value="${project.title}" placeholder="e.g. MedSync Enterprise Backend" required/>
+                            </div>
+
+                            <!-- Subtitle -->
+                            <div class="mb-3">
+                                <label for="subtitle" class="form-label-custom">Subtitle</label>
+                                <input type="text" id="subtitle" name="subtitle" class="form-control form-control-custom"
+                                       th:value="${project.subtitle}" placeholder="Brief one-liner about the project"/>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="mb-3">
+                                <label for="description" class="form-label-custom">Description *</label>
+                                <textarea id="description" name="description" class="form-control form-control-custom"
+                                          rows="3" th:text="${project.description}"
+                                          placeholder="Detailed description of the project" required></textarea>
+                            </div>
+
+                            <div class="row g-3">
+                                <!-- Tech Tags -->
+                                <div class="col-md-6">
+                                    <label for="techTagsInput" class="form-label-custom">Tech Tags (comma-separated)</label>
+                                    <input type="text" id="techTagsInput" name="techTagsInput"
+                                           class="form-control form-control-custom"
+                                           th:value="${project.techTagsString}"
+                                           placeholder="Java, Spring Boot, MongoDB"/>
+                                </div>
+
+                                <!-- Display Order -->
+                                <div class="col-md-3">
+                                    <label for="displayOrder" class="form-label-custom">Display Order</label>
+                                    <input type="number" id="displayOrder" name="displayOrder"
+                                           class="form-control form-control-custom"
+                                           th:value="${project.displayOrder}" placeholder="1"/>
+                                </div>
+
+                                <!-- Mockup Type -->
+                                <div class="col-md-3">
+                                    <label for="mockupType" class="form-label-custom">Mockup Type</label>
+                                    <select id="mockupType" name="mockupType" class="form-select form-control-custom">
+                                        <option value="laptop" th:selected="${project.mockupType == 'laptop'}">Laptop</option>
+                                        <option value="phone" th:selected="${project.mockupType == 'phone'}">Phone</option>
+                                        <option value="tablet" th:selected="${project.mockupType == 'tablet'}">Tablet</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Project Image Upload -->
+                            <div class="mb-3 mt-3">
+                                <label for="imageFile" class="form-label-custom">Project Image</label>
+                                <input type="file" id="imageFile" name="imageFile"
+                                       class="form-control form-control-custom" accept="image/*"/>
+                                <div th:if="${project.imageUrl}" class="mt-2">
+                                    <small class="text-muted">Current image:</small>
+                                    <img th:src="${project.imageUrl}" class="d-block mt-1 rounded"
+                                         style="max-width:200px; max-height:120px; object-fit:cover;"/>
+                                </div>
+                             <!-- GitHub URL & Live Demo URL -->
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label for="githubUrl" class="form-label-custom">
+                                        <i class="bi bi-github me-1"></i>GitHub Repository URL
+                                    </label>
+                                    <input type="url" id="githubUrl" name="githubUrl" class="form-control form-control-custom"
+                                           th:value="${project.githubUrl}" placeholder="https://github.com/username/project"/>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="liveUrl" class="form-label-custom">
+                                        <i class="bi bi-box-arrow-up-right me-1"></i>Live Demo / Deployment URL
+                                    </label>
+                                    <input type="url" id="liveUrl" name="liveUrl" class="form-control form-control-custom"
+                                           th:value="${project.liveUrl}" placeholder="https://your-live-demo.com"/>
+                                </div>
+                            </div>
+
+                            <hr class="border-secondary my-4"/>
+
+                            <!-- Challenge -->
+                            <div class="mb-3">
+                                <label for="challengeText" class="form-label-custom">
+                                    <i class="bi bi-lightning-charge text-warning me-1"></i>Engineering Challenge
+                                </label>
+                                <textarea id="challengeText" name="challengeText" class="form-control form-control-custom"
+                                          rows="2" th:text="${project.challengeText}"
+                                          placeholder="What was the core challenge?"></textarea>
+                            </div>
+
+                            <!-- Solution -->
+                            <div class="mb-3">
+                                <label for="solutionText" class="form-label-custom">
+                                    <i class="bi bi-stars text-success me-1"></i>Solution Strategy
+                                </label>
+                                <textarea id="solutionText" name="solutionText" class="form-control form-control-custom"
+                                          rows="2" th:text="${project.solutionText}"
+                                          placeholder="How did you solve it?"></textarea>
+                            </div>
+
+                            <!-- Results -->
+                            <div class="mb-3">
+                                <label for="resultsInput" class="form-label-custom">
+                                    <i class="bi bi-check-circle text-success me-1"></i>Key Results (one per line)
+                                </label>
+                                <textarea id="resultsInput" name="resultsInput" class="form-control form-control-custom"
+                                          rows="3" th:text="${project.resultsString}"
+                                          placeholder="Result 1&#10;Result 2&#10;Result 3"></textarea>
+                            </div>
+
+                            <div class="row g-3">
+                                <!-- Role -->
+                                <div class="col-md-6">
+                                    <label for="role" class="form-label-custom">Your Role</label>
+                                    <input type="text" id="role" name="role" class="form-control form-control-custom"
+                                           th:value="${project.role}" placeholder="e.g. Backend Architect"/>
+                                </div>
+
+                                <!-- Timeline -->
+                                <div class="col-md-6">
+                                    <label for="timeline" class="form-label-custom">Timeline</label>
+                                    <input type="text" id="timeline" name="timeline" class="form-control form-control-custom"
+                                           th:value="${project.timeline}" placeholder="e.g. 4 Months (2025)"/>
+                                </div>
+                            </div>
+
+                            <!-- Submit -->
+                            <div class="d-flex gap-3 mt-4">
+                                <button type="submit" class="btn btn-primary-custom">
+                                    <i class="bi bi-check-lg me-2"></i>Save Project
+                                </button>
+                                <a th:href="@{/admin/projects}" class="btn btn-outline-custom">Cancel</a>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+</body>
+</html>

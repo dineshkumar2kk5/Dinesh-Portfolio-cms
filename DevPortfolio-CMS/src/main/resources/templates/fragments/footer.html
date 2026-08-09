@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<footer th:fragment="footer" class="site-footer" id="contact-section">
+    <div class="container">
+        <div class="row g-5 py-5">
+            <!-- Brand Column -->
+            <div class="col-lg-4">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <span class="brand-text fs-5">dinesh.dev</span>
+                    <span class="pulse-dot"></span>
+                </div>
+                <p class="footer-desc">
+                    Java Backend Developer specializing in Spring Boot microservices,
+                    database optimization, and high-performance concurrent systems.
+                </p>
+                <p class="footer-college">
+                    <i class="bi bi-mortarboard me-1"></i>
+                    Siddartha Institute of Science and Technology, Puttur (SISTK)
+                    <br/>B.Tech CSE — Class of 2027
+                </p>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="col-lg-2 col-md-4">
+                <h6 class="footer-heading">Navigation</h6>
+                <ul class="footer-links">
+                    <li><a th:href="@{/}">Portfolio</a></li>
+                    <li><a th:href="@{/blog}">Blog</a></li>
+                    <li><a href="#projects-section">Projects</a></li>
+                    <li><a th:href="@{/auth/login}">Admin Login</a></li>
+                </ul>
+            </div>
+
+            <!-- Tech Stack -->
+            <div class="col-lg-3 col-md-4">
+                <h6 class="footer-heading">Tech Stack</h6>
+                <div class="d-flex flex-wrap gap-2">
+                    <span class="tech-badge-footer">Java</span>
+                    <span class="tech-badge-footer">Spring Boot</span>
+                    <span class="tech-badge-footer">MongoDB</span>
+                    <span class="tech-badge-footer">Docker</span>
+                    <span class="tech-badge-footer">PostgreSQL</span>
+                    <span class="tech-badge-footer">Redis</span>
+                </div>
+            </div>
+
+            <!-- Contact -->
+            <div class="col-lg-3 col-md-4">
+                <h6 class="footer-heading">Connect</h6>
+                <ul class="footer-links">
+                    <li>
+                        <a href="mailto:dineshkumar2kk5@gmail.com">
+                            <i class="bi bi-envelope me-2"></i>dineshkumar2kk5@gmail.com
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://github.com/dineshkumar2kk5" target="_blank">
+                            <i class="bi bi-github me-2"></i>GitHub
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.linkedin.com/in/dineshkuma2kk5/" target="_blank">
+                            <i class="bi bi-linkedin me-2"></i>LinkedIn
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Bottom Bar -->
+        <div class="footer-bottom">
+            <span class="footer-copy">
+                &copy; 2027 Dinesh Kumar. Built with Spring Boot &amp; Thymeleaf.
+            </span>
+            <span class="footer-cms-badge">
+                <i class="bi bi-gear me-1"></i> DevPortfolio CMS v1.0
+            </span>
+        </div>
+    </div>
+</footer>
+</html>

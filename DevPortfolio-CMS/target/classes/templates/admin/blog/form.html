@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+<head>
+    <title th:text="${pageTitle}">Blog Post Form</title>
+    <!-- Marked.js for live Markdown preview -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+
+<body>
+<main layout:fragment="content">
+
+    <section class="admin-section">
+        <div class="container py-5">
+
+            <span class="admin-badge"><i class="bi bi-pencil-square me-1"></i> BLOG POST</span>
+            <h2 class="admin-title" th:text="${post.id != null ? 'Edit Blog Post' : 'New Blog Post'}">Blog Form</h2>
+
+            <div class="admin-form-card mt-4">
+                <form th:action="${formAction}" method="post" enctype="multipart/form-data">
+                    <!-- Hidden fields -->
+                    <input type="hidden" name="id" th:value="${post.id}"/>
+                    <input type="hidden" name="slug" th:value="${post.slug}"/>
+                    <input type="hidden" name="coverImageUrl" th:value="${post.coverImageUrl}"/>
+                    <input type="hidden" name="contentHtml" th:value="${post.contentHtml}"/>
+                    <input type="hidden" name="createdAt" th:value="${post.createdAt}"/>
+                    <input type="hidden" name="authorId" th:value="${post.authorId}"/>
+                    <input type="hidden" name="authorName" th:value="${post.authorName}"/>
+
+                    <!-- Title -->
+                    <div class="mb-3">
+                        <label for="title" class="form-label-custom">Post Title *</label>
+                        <input type="text" id="title" name="title" class="form-control form-control-custom"
+                               th:value="${post.title}" placeholder="e.g. Understanding JVM Memory Management" required/>
+                    </div>
+
+                    <div class="row g-3">
+                        <!-- Tags -->
+                        <div class="col-md-6">
+                            <label for="tagsInput" class="form-label-custom">Tags (comma-separated)</label>
+                            <input type="text" id="tagsInput" name="tagsInput" class="form-control form-control-custom"
+                                   th:value="${post.tagsString}" placeholder="Java, JVM, Performance"/>
+                        </div>
+
+                        <!-- Excerpt -->
+                        <div class="col-md-6">
+                            <label for="excerpt" class="form-label-custom">Excerpt (auto-generated if blank)</label>
+                            <input type="text" id="excerpt" name="excerpt" class="form-control form-control-custom"
+                                   th:value="${post.excerpt}" placeholder="Short summary for listing page"/>
+                        </div>
+                    </div>
+
+                    <!-- Cover Image -->
+                    <div class="mb-3 mt-3">
+                        <label for="coverFile" class="form-label-custom">Cover Image</label>
+                        <input type="file" id="coverFile" name="coverFile"
+                               class="form-control form-control-custom" accept="image/*"/>
+                        <div th:if="${post.coverImageUrl}" class="mt-2">
+                            <small class="text-muted">Current cover:</small>
+                            <img th:src="${post.coverImageUrl}" class="d-block mt-1 rounded"
+                                 style="max-width:300px; max-height:150px; object-fit:cover;"/>
+                        </div>
+                    </div>
+
+                    <!-- Published Toggle -->
+                    <div class="mb-4">
+                        <div class="form-check form-switch">
+                            <input type="checkbox" class="form-check-input" id="published" name="published"
+                                   th:checked="${post.published}"/>
+                            <label for="published" class="form-check-label form-label-custom">
+                                Publish this post (visible on public blog)
+                            </label>
+                        </div>
+                    </div>
+
+                    <hr class="border-secondary my-4"/>
+
+                    <!-- Markdown Editor with Live Preview -->
+                    <div class="mb-3">
+                        <label for="contentMarkdown" class="form-label-custom">
+                            <i class="bi bi-markdown me-1"></i>Content (Markdown) *
+                        </label>
+                        <p class="text-muted small mb-2">
+                            Write your post using Markdown syntax. Headers, code blocks, links, and lists are all supported.
+                        </p>
+
+                        <div class="row g-3">
+                            <!-- Editor -->
+                            <div class="col-md-6">
+                                <div class="editor-label">
+                                    <i class="bi bi-code me-1"></i> MARKDOWN EDITOR
+                                </div>
+                                <textarea id="contentMarkdown" name="contentMarkdown"
+                                          class="form-control form-control-custom markdown-editor"
+                                          rows="20" th:text="${post.contentMarkdown}"
+                                          placeholder="## My Blog Post&#10;&#10;Write your content here using **Markdown**..."
+                                          required oninput="updatePreview()"></textarea>
+                            </div>
+
+                            <!-- Live Preview -->
+                            <div class="col-md-6">
+                                <div class="editor-label">
+                                    <i class="bi bi-eye me-1"></i> LIVE PREVIEW
+                                </div>
+                                <div id="markdownPreview" class="markdown-preview prose">
+                                    <p class="text-muted">Start typing to see preview...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Buttons -->
+                    <div class="d-flex gap-3 mt-4">
+                        <button type="submit" class="btn btn-primary-custom">
+                            <i class="bi bi-check-lg me-2"></i>Save Post
+                        </button>
+                        <a th:href="@{/admin/blog}" class="btn btn-outline-custom">Cancel</a>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </section>
+
+</main>
+
+<th:block layout:fragment="scripts">
+<script>
+    // Live Markdown preview using marked.js
+    function updatePreview() {
+        const md = document.getElementById('contentMarkdown').value;
+        const preview = document.getElementById('markdownPreview');
+        if (md.trim()) {
+            preview.innerHTML = marked.parse(md);
+        } else {
+            preview.innerHTML = '<p class="text-muted">Start typing to see preview...</p>';
+        }
+    }
+    // Initialize preview on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        updatePreview();
+    });
+</script>
+</th:block>
+</body>
+</html>
