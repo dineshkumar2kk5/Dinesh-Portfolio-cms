@@ -1,12 +1,11 @@
-# Multi-stage build for Spring Boot Maven application
-FROM eclipse-temurin:21-jdk AS build
+# Multi-stage Docker build for Spring Boot 3 on Render
+FROM eclipse-temurin:21-jdk-alpine AS build
 WORKDIR /app
 COPY . .
-RUN chmod +x mvnw
+RUN chmod +x ./mvnw
 RUN ./mvnw clean package -DskipTests
 
-# Runtime stage
-FROM eclipse-temurin:21-jre
+FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 COPY --from=build /app/target/devportfolio-cms-1.0.0.jar app.jar
 EXPOSE 8080
