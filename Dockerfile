@@ -1,11 +1,11 @@
-# Multi-stage Docker build for Spring Boot on Render
+# Multi-stage Docker build for Spring Boot on Render (Root context)
 FROM eclipse-temurin:21-jdk-alpine AS build
 WORKDIR /app
 
-# Install Maven directly in Alpine container for guaranteed 100% build reliability
+# Install Maven in Alpine container
 RUN apk add --no-cache maven
 
-COPY . .
+COPY DevPortfolio-CMS ./
 RUN mvn clean package -DskipTests
 
 FROM eclipse-temurin:21-jre-alpine

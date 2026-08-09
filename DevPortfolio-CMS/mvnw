@@ -1,0 +1,45 @@
+#!/bin/sh
+# ----------------------------------------------------------------------------
+# Apache Maven Wrapper startup batch script, with optional pawn process.
+# ----------------------------------------------------------------------------
+
+# Language standard
+export LC_ALL=C.UTF-8
+
+# Find directory containing script
+PRG="$0"
+while [ -h "$PRG" ]; do
+  ls=`ls -ld "$PRG"`
+  link=`expr "$ls" : '.*-> \(.*\)$'`
+  if expr "$link" : '/.*' > /dev/null; then
+    PRG="$link"
+  else
+    PRG=`dirname "$PRG"`/"$link"
+  fi
+done
+SAVED=`pwd`
+CDPATH=
+cd `dirname "$PRG"`/ >/dev/null
+MAVEN_PROJECT_ROOT=`pwd`
+cd "$SAVED" >/dev/null
+
+# Find wrapper jar
+WRAPPER_JAR="$MAVEN_PROJECT_ROOT/.mvn/wrapper/maven-wrapper.jar"
+WRAPPER_LAUNCHER=org.apache.maven.wrapper.MavenWrapperMain
+
+# Determine java command
+if [ -n "$JAVA_HOME" ]; then
+  JAVACMD="$JAVA_HOME/bin/java"
+else
+  JAVACMD="java"
+fi
+
+if [ ! -x "$JAVACMD" ] && ! which java >/dev/null 2>&1; then
+  echo "Error: JAVA_HOME is not defined correctly." >&2
+  exit 1
+fi
+
+exec "$JAVACMD" \
+  -classpath "$WRAPPER_JAR" \
+  "-Dmaven.multiModuleProjectDirectory=$MAVEN_PROJECT_ROOT" \
+  $WRAPPER_LAUNCHER "$@"
