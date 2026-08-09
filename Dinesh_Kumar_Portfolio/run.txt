@@ -1,0 +1,55 @@
+================================================================================
+                         PROJECT RUN & DEPLOYMENT GUIDE
+================================================================================
+
+This guide explains how to install dependencies, run the application locally in 
+development mode, build for production, and deploy it fully.
+
+--------------------------------------------------------------------------------
+1. LOCAL DEVELOPMENT SETUP & RUNNING
+--------------------------------------------------------------------------------
+
+Prerequisites:
+- Node.js (version 18 or above recommended)
+- npm (Node Package Manager, installed with Node.js)
+
+Steps:
+a) Install dependencies:
+   Run the following command at the root of the project:
+   $ npm install
+
+b) Start local development server:
+   $ npm run dev
+   The development server will mount your client-side React routes and serve the 
+   app locally. By default, it runs on http://localhost:3000
+
+--------------------------------------------------------------------------------
+2. PROJECT BUILD PHASE
+--------------------------------------------------------------------------------
+
+To compile the TypeScript code and generate optimized, minified production assets:
+$ npm run build
+
+This command uses Vite to bundle the React code into static HTML/JS/CSS assets 
+located in the "dist/" folder.
+
+--------------------------------------------------------------------------------
+3. DURABLE PORTABLE DEPLOYMENT
+--------------------------------------------------------------------------------
+
+A. STATENT STATIC HOSTING (Vercel, Netlify, GitHub Pages, Firebase Hosting):
+   Because this is a Single-Page Application (SPA) powered by Vite, you can 
+   deploy the compiled static assets in the "dist/" folder directly to any 
+   static host:
+   1. Build the app using: npm run build
+   2. Upload / drag-and-drop the contents of the "dist" folder to your service, or 
+      connect your GitHub repository for automated CI/CD.
+
+B. CONTAINER & CLOUD RUN DEPLOYMENT:
+   To deploy the application to Cloud Run or any Docker container setup:
+   1. The app compiles static files perfectly under "dist/".
+   2. Our system hosts the React client-side build container with automatic static 
+      file serving configured via reverse proxy mappings on Port 3000.
+   3. Ensure you do not change the default binding environment configurations.
+
+================================================================================

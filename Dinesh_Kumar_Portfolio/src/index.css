@@ -1,0 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-mono: "Space Mono", monospace;
+  
+  --color-brand-beige: #D5C2B1;
+  --color-brand-charcoal: #1E1E1E;
+}
+
+html {
+  scroll-behavior: smooth !important;
+  scroll-padding-top: 4.5rem; /* offset for sticky header */
+}
+
+@layer base {
+  body {
+    @apply font-sans bg-[#FBFBFA] text-[#1E1E1E] antialiased;
+  }
+}
+
+/* Custom styles for editorial layout */
+.serif-chunky {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  letter-spacing: -0.05em;
+}
+
+/* Animated heartbeat or typing styling if needed */
+@keyframes blink {
+  50% { opacity: 0; }
+}
+.terminal-cursor {
+  animation: blink 1s step-end infinite;
+}
+
