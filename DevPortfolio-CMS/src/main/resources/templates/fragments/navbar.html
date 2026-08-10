@@ -5,8 +5,8 @@
 <!-- Navbar Fragment -->
 <nav th:fragment="navbar" class="navbar navbar-expand-lg sticky-top glass-nav" id="portfolio-nav">
     <div class="container d-flex align-items-center justify-content-between">
-        <!-- Brand (Clicking dinesh.dev opens React Portfolio at http://localhost:3000) -->
-        <a class="navbar-brand d-flex align-items-center gap-2 m-0 p-0" href="http://localhost:3000" target="_blank" title="Click to open React Portfolio (http://localhost:3000)">
+        <!-- Brand (Clicking dinesh.dev opens React Portfolio) -->
+        <a class="navbar-brand d-flex align-items-center gap-2 m-0 p-0" th:href="${frontendUrl}" target="_blank" th:title="'Click to open React Portfolio (' + ${frontendUrl} + ')'">
             <span class="brand-text text-uppercase font-mono fw-bold fs-6 tracking-wider">dinesh.dev</span>
             <span class="pulse-dot"></span>
         </a>

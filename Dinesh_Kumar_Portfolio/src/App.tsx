@@ -24,6 +24,17 @@ import IdBadge from "./components/IdBadge";
 import ProjectMockup from "./components/ProjectMockup";
 import AiRecruiter from "./components/AiRecruiter";
 
+// Dynamic Backend API & CMS Base URL (Production: Render URL from VITE_API_BASE_URL, Local: http://localhost:8080)
+const getApiBaseUrl = (): string => {
+  const envUrl = (import.meta.env && import.meta.env.VITE_API_BASE_URL) || (typeof process !== "undefined" && process.env?.VITE_API_BASE_URL);
+  if (envUrl && typeof envUrl === "string" && envUrl.trim() !== "") {
+    return envUrl.trim().replace(/\/+$/, "");
+  }
+  return "http://localhost:8080";
+};
+
+const API_BASE_URL = getApiBaseUrl();
+
 export default function App() {
   const activeProfile = "dinesh";
   const [activeProject, setActiveProject] = useState<ProjectItem | null>(null);
@@ -39,12 +50,12 @@ export default function App() {
   const getImageUrl = (url?: string | null) => {
     if (!url) return null;
     if (url.startsWith("http://") || url.startsWith("https://")) return url;
-    if (url.startsWith("/uploads/")) return `http://localhost:8080${url}`;
+    if (url.startsWith("/uploads/")) return `${API_BASE_URL}${url}`;
     return url;
   };
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/projects")
+    fetch(`${API_BASE_URL}/api/projects`)
       .then((res) => {
         if (!res.ok) throw new Error("API error");
         return res.json();
@@ -69,7 +80,7 @@ export default function App() {
             },
             imageUrl: p.imageUrl,
             githubUrl: p.githubUrl || "https://github.com/dineshkumar2kk5",
-            liveUrl: p.liveUrl || "http://localhost:8080/admin/projects",
+            liveUrl: p.liveUrl || `${API_BASE_URL}/admin/projects`,
           }));
           setProjects(mapped);
           setCmsConnected(true);
@@ -77,7 +88,7 @@ export default function App() {
       })
       .catch((err) => console.log("CMS offline, using static projects:", err));
 
-    fetch("http://localhost:8080/api/certifications")
+    fetch(`${API_BASE_URL}/api/certifications`)
       .then((res) => res.json())
       .then((apiCerts) => {
         if (Array.isArray(apiCerts) && apiCerts.length > 0) {
@@ -86,12 +97,12 @@ export default function App() {
       })
       .catch((err) => console.log("CMS offline, using static certs:", err));
 
-    fetch("http://localhost:8080/api/resume")
+    fetch(`${API_BASE_URL}/api/resume`)
       .then((res) => res.json())
       .then((data) => {
         if (data && data.fileUrl) {
           const resolvedUrl = data.fileUrl.startsWith("/uploads/")
-            ? `http://localhost:8080${data.fileUrl}`
+            ? `${API_BASE_URL}${data.fileUrl}`
             : data.fileUrl;
           setResumeUrl(resolvedUrl);
         }
@@ -177,7 +188,7 @@ export default function App() {
                 Record
               </a>
               <a
-                href="http://localhost:8080/admin/dashboard"
+                href={`${API_BASE_URL}/admin/dashboard`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`text-[10px] uppercase tracking-widest font-mono font-bold transition-all px-3 py-1.5 rounded-full border flex items-center gap-1.5 shadow-xs ${
@@ -1161,7 +1172,7 @@ export default function App() {
 
                   {/* Live Demo Link */}
                   <a
-                    href={activeProject.liveUrl || "http://localhost:8080/admin/projects"}
+                    href={activeProject.liveUrl || `${API_BASE_URL}/admin/projects`}
                     target="_blank"
                     rel="noreferrer"
                     className="px-4 py-2 rounded-lg text-xs font-mono font-bold flex items-center gap-2 transition-all cursor-pointer bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm"

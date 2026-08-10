@@ -17,7 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.Optional;
 
 import com.dinesh.portfolio.model.Resume;
-import com.dinesh.portfolio.service.ResumeService;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * Admin dashboard controller. All routes under /admin/** require ROLE_ADMIN.
@@ -26,6 +26,9 @@ import com.dinesh.portfolio.service.ResumeService;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
+
+    @Value("${app.frontend.url:http://localhost:3000}")
+    private String frontendUrl;
 
     private final ProjectService projectService;
     private final BlogPostService blogPostService;
@@ -43,6 +46,11 @@ public class AdminController {
         this.certificationService = certificationService;
         this.fileStorageService = fileStorageService;
         this.resumeService = resumeService;
+    }
+
+    @ModelAttribute("frontendUrl")
+    public String getFrontendUrl() {
+        return frontendUrl;
     }
 
     // ==================== DASHBOARD ====================
