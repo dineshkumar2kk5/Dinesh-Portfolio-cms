@@ -12,16 +12,16 @@ export default function IdBadge({ name, title, portrait, activeMode }: IdBadgePr
   const isDev = activeMode === "developer";
 
   return (
-    <div className="relative flex flex-col items-center">
-      {/* 3D Lanyard neck strap loop coming down */}
-      <div className="absolute -top-36 w-6 h-36 border-x-4 border-[#ECEAE7] rounded-b-xl drop-shadow select-none z-10" />
+    <div className="relative flex flex-col items-center pt-8 lg:pt-0">
+      {/* 3D Lanyard neck strap loop coming down (visible on desktop) */}
+      <div className="absolute -top-36 w-6 h-36 border-x-4 border-[#ECEAE7] rounded-b-xl drop-shadow select-none z-10 hidden lg:block" />
       
       {/* Lanyard Clip Attachment (Acrylic + Silver Metal Ring) */}
       <motion.div 
         whileHover={{ scale: 1.15, rotate: 15 }}
         whileTap={{ scale: 0.85, rotate: -20 }}
         transition={{ type: "spring", stiffness: 600, damping: 10 }}
-        className="absolute -top-10 flex flex-col items-center select-none z-20 cursor-pointer"
+        className="absolute -top-2 lg:-top-10 flex flex-col items-center select-none z-20 cursor-pointer"
       >
         {/* Silver loop ring */}
         <div className="w-8 h-8 rounded-full border-4 border-zinc-400 bg-zinc-300 shadow-inner flex items-center justify-center">

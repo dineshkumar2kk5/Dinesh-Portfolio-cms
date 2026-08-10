@@ -15,7 +15,8 @@ import {
   Moon,
   X,
   Github,
-  ExternalLink
+  ExternalLink,
+  Menu
 } from "lucide-react";
 
 import { dineshData } from "./data";
@@ -26,7 +27,8 @@ import AiRecruiter from "./components/AiRecruiter";
 
 // Dynamic Backend API & CMS Base URL (Production: Render URL from VITE_API_BASE_URL, Local: http://localhost:8080)
 const getApiBaseUrl = (): string => {
-  const envUrl = (import.meta.env && import.meta.env.VITE_API_BASE_URL) || (typeof process !== "undefined" && process.env?.VITE_API_BASE_URL);
+  const metaEnv = (import.meta as any).env;
+  const envUrl = (metaEnv && metaEnv.VITE_API_BASE_URL) || (typeof process !== "undefined" && process.env?.VITE_API_BASE_URL);
   if (envUrl && typeof envUrl === "string" && envUrl.trim() !== "") {
     return envUrl.trim().replace(/\/+$/, "");
   }
@@ -42,6 +44,7 @@ export default function App() {
   const [isDark, setIsDark] = useState(false);
   const [showAllProjects, setShowAllProjects] = useState(false);
   const [showAllCertifications, setShowAllCertifications] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [projects, setProjects] = useState<ProjectItem[]>(dineshData.projects);
   const [certifications, setCertifications] = useState<any[]>(dineshData.certifications || []);
   const [cmsConnected, setCmsConnected] = useState<boolean>(false);
@@ -229,9 +232,81 @@ export default function App() {
                 </>
               )}
             </button>
+
+            {/* Mobile Hamburger Menu Toggle Button (Burger Bar) */}
+            <button
+              id="btn-mobile-menu"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className={`md:hidden p-2 rounded-lg border transition-all cursor-pointer shadow-xs select-none ${isDark
+                ? "bg-[#1E1A15] border-zinc-800 text-zinc-300 hover:text-white"
+                : "bg-white border-zinc-250 text-zinc-700 hover:bg-zinc-50"
+                }`}
+              aria-label="Toggle Mobile Navigation Menu"
+              title="Menu"
+            >
+              {mobileMenuOpen ? <X size={16} /> : <Menu size={16} />}
+            </button>
           </div>
 
         </div>
+
+        {/* Collapsible Mobile Navigation Drawer */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.25 }}
+              className={`md:hidden border-t px-6 py-4 space-y-3 transition-colors ${isDark
+                ? "bg-[#090807] border-zinc-850 text-zinc-200"
+                : "bg-[#FAF8F5] border-zinc-250 text-zinc-800"
+                }`}
+            >
+              <div className="flex flex-col space-y-2">
+                <a
+                  href="#about"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`py-2 text-xs uppercase tracking-widest font-black transition-colors ${isDark ? "text-zinc-300 hover:text-emerald-400" : "text-zinc-700 hover:text-emerald-700"
+                    }`}
+                >
+                  About
+                </a>
+                <a
+                  href="#projects"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`py-2 text-xs uppercase tracking-widest font-black transition-colors ${isDark ? "text-zinc-300 hover:text-emerald-400" : "text-zinc-700 hover:text-emerald-700"
+                    }`}
+                >
+                  Projects
+                </a>
+                <a
+                  href="#timeline"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`py-2 text-xs uppercase tracking-widest font-black transition-colors ${isDark ? "text-zinc-300 hover:text-emerald-400" : "text-zinc-700 hover:text-emerald-700"
+                    }`}
+                >
+                  Record
+                </a>
+                <div className="pt-2">
+                  <a
+                    href={`${API_BASE_URL}/admin/dashboard`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-mono font-bold uppercase tracking-wider border shadow-xs ${isDark
+                      ? "bg-emerald-950/60 border-emerald-700 text-emerald-400 hover:bg-emerald-900/80"
+                      : "bg-emerald-50 border-emerald-300 text-emerald-700 hover:bg-emerald-100"
+                      }`}
+                  >
+                    <Briefcase size={14} />
+                    {cmsConnected ? "CMS Connected" : "CMS Admin"}
+                  </a>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
       {/* ================= HERO & BIO BOARD OVERVIEW ================= */}
@@ -346,7 +421,7 @@ export default function App() {
         </div>
 
         {/* Right column: Interactive physical ID board lanyard badge hanging */}
-        <div className="lg:col-span-5 flex justify-center lg:justify-end py-6 select-none">
+        <div className="lg:col-span-5 flex justify-center lg:justify-end py-6 mt-6 lg:mt-0 select-none">
           <IdBadge
             name={data.name}
             title={data.title}
